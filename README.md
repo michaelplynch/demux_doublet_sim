@@ -13,12 +13,15 @@ Repository for Nextflow pipeline used in demuxSNP demultipelxing paper
 ## Inputs
 
 Most inputs are specified in nextflow.config:
-    container__souporcell: path to souporcell apptainer image, ideally at top level of project.
-    bam_path: Path to demultiplexed bam files.
-    barcodes_path: Path to demultiplexed barcodes.
-    tenx: Path to barcodes.tsv, features.tsv and matrix.mtx files from multiplexed 10X output.
-    common_variants: common variants e.g. from 1K genome project.
-    ref: path to reference genome, ideally in data/input directory.
+    container__souporcell: path to souporcell apptainer image, ideally at top level of project.  
+    bam_path: Path to demultiplexed bam files.  
+    barcodes_path: Path to demultiplexed barcodes.  
+    tenx: Path to barcodes.tsv, features.tsv and matrix.mtx files from multiplexed 10X output.  
+    common_variants: common variants e.g. from 1K genome project.  
+    ref: path to reference genome, ideally in data/input directory.  
+
+Doublet simulation parameters are specified in params_ccrcc.csv
+The workflow caters for subsampling (also specified in params_ccrcc.csv) although this was not explored in the paper.
 
 ## Outputs
 
