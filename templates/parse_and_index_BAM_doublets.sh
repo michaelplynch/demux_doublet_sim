@@ -52,14 +52,14 @@ samtools view -h $6 | \
 awk \
 'NR==1 { next } FNR==NR { a[$1]=$2; next } (i=gensub(/.*CB\:Z\:([A-Za-z]+\-[A-Za-z0-9]+).*/, "\\1", 1, $0)) in a { gsub(i, a[i]) }1' \
 $5 - | \
-samtools view -bo "doublets_pbmc_${4}_${3}pc.bam"
+samtools view -bo "doublets_ccrcc_${4}_${3}pc.bam"
 
 
 # ---------
 # Index BAM
 # ---------
 
-samtools index "doublets_pbmc_${4}_${3}pc.bam"
+samtools index "doublets_ccrcc_${4}_${3}pc.bam"
 
 
 # -----------------------------------

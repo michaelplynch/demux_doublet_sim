@@ -1,20 +1,16 @@
 id_ch = Channel.from(1,2,3,4,5,6)
-id_ch.view()
-
-seed_ch = Channel.from(1)
-
+seed_ch = Channel.from(1,2,3,4,5)
 ngenes_ch = Channel.from(50,75,100,500,1000,5000,10000)
-read_ch = Channel.fromPath( "/data/projects/demuxSNP/nextflow/ccrcc_raw/ccrcc_6x_hashtag*.bam")
-read_ch.view()
 
-barcodes_ch = Channel.fromPath("/data/projects/demuxSNP/nextflow/ccrcc_raw/Hashtag*_ccrcc_barcodes.tsv")
-barcodes_ch.view()
+read_ch = Channel.fromPath(params.bam_path)
+barcodes_ch = Channel.fromPath(params.barcodes_path)
 
-params.dir="${projectDir}/ccrcc_out"
-params.tenx="/data/projects/yufei/210827_10X_KW9275_bcl/cellranger-6.1.1/GRCh38/BRI-1348/outs/filtered_feature_bc_matrix"
-params.ref="${projectDir}/refdata-gex-GRCh38-2020-A/fasta/genome.fa"
-params.common_variants="${projectDir}/data/genome1K.phase3.SNP_AF5e2.chr1toX.hg38.chr.vcf"
-//params.common_variants="${projectDir}/data/5p_chr.vcf"
+params.dir="${projectDir}/data/output"
+
+//params.tenx="/data/projects/yufei/210827_10X_KW9275_bcl/cellranger-6.1.1/GRCh38/BRI-1348/outs/filtered_feature_bc_matrix"
+//params.ref="${projectDir}/data/input/refdata-gex-GRCh38-2020-A/fasta/genome.fa"
+//params.common_variants="${projectDir}/data/genome1K.phase3.SNP_AF5e2.chr1toX.hg38.chr.vcf"
+
 
 params.sim='./params_ccrcc.csv'
 sims_ch = Channel.fromPath(params.sim)
@@ -24,7 +20,6 @@ sims_ch = Channel.fromPath(params.sim)
         }
     .view()
 
-sims_ch.combine(seed_ch).view()
 
 log.info """\
     S N P   S I M   P I P E L I N E
@@ -125,8 +120,8 @@ process LOOKUP {
     tuple val(key), val(pcdoub), path(barcodes)
 
     output:
-    tuple val(key), path("barcodes_merged_pbmc_${key}_${pcdoub}pc.tsv"), emit: bcs_merged
-    tuple val(key), val(pcdoub), path("lookup_table_doublets_pbmc_${key}_${pcdoub}pc.tsv"), emit: lookup
+    tuple val(key), path("barcodes_merged_ccrcc_${key}_${pcdoub}pc.tsv"), emit: bcs_merged
+    tuple val(key), val(pcdoub), path("lookup_table_doublets_ccrcc_${key}_${pcdoub}pc.tsv"), emit: lookup
 
     shell:
     '''
@@ -143,7 +138,7 @@ process SIMDOUB {
     
 
     output:
-    tuple val(key), val(doublets), path("doublets_pbmc_${key}_${doublets}pc.bam"), path("doublets_pbmc_${key}_${doublets}pc.bam.bai")
+    tuple val(key), val(doublets), path("doublets_ccrcc_${key}_${doublets}pc.bam"), path("doublets_ccrcc_${key}_${doublets}pc.bam.bai")
     
     shell:
     '''
@@ -172,11 +167,11 @@ process SOUP {
      souporcell_pipeline.py \
         -i !{bam} \
         -b !{lookup} \
-        -f "!{projectDir}/refdata-gex-GRCh38-2020-A/fasta/genome.fa" \
+        -f !{params.ref} \
         -t 10 \
         -o "soup_!{key}_!{doublets}_1" \
         -k 6 \
-        --common_variants "!{projectDir}/data/genome1K.phase3.SNP_AF5e2.chr1toX.hg38.chr.vcf" \
+        --common_variants !{params.common_variants} \
         --skip_remap SKIP_REMAP
     end=`date +%s`
     runtime=$((end-start))
@@ -205,11 +200,11 @@ process SOUPNGENES {
      souporcell_pipeline.py \
         -i !{bam} \
         -b !{lookup} \
-        -f "!{projectDir}/refdata-gex-GRCh38-2020-A/fasta/genome.fa" \
+        -f !{params.ref} \
         -t 10 \
         -o "soup_!{key}_!{doublets}_1" \
         -k 6 \
-        --common_variants !{vcf} \
+        --common_variants !{params.common_variants} \
         --skip_remap SKIP_REMAP
     end=`date +%s`
     runtime=$((end-start))

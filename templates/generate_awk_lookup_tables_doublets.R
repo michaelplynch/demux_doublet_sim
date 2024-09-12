@@ -27,7 +27,7 @@ dir_out <- args[3]
 barcodes <- args[4]
 pc_doublets_sims <- as.numeric(args[5])
 key <- args[6]
-dataset_name_sims <- "pbmc" # args[6]
+dataset_name_sims <- 'ccrcc' # args[6]
 
 
 # ------------------------------------------
