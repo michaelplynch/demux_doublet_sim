@@ -5,8 +5,14 @@ Repository for Nextflow pipeline used in demuxSNP demultipelxing paper
 ## Overall workflow
 
 1. Simulate doublets
--
-2. Benchmark methods
+Scripts/templates leveraged from Weber et al. (DOI: https://doi.org/10.1093/gigascience/giab062)
+- Start with demultiplexed/individual bams
+- Barcode suffix is replace with sample key e.g. K1, K2 etc.
+- bam files are merged.
+- Lookup file generated with barcodes randomly selected to satisfy required proportion of doublets.
+- Barcodes in bam renamed according to lookup to simulate doublets.  
+2. Benchmark methods  
+Tests demuxSNP (hybrid), HTOreader (hybrid) and souporcell.
 - Experiments 1: Vary doublet rate
 - Experiment 2: Vary SNP subsetting
 
