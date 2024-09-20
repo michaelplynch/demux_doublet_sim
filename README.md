@@ -4,7 +4,7 @@ Repository for Nextflow pipeline used in demuxSNP demultipelxing paper
 
 ## Overall workflow
 
-1. Simulate doublets
+1. Simulate doublets  
 Scripts/templates leveraged from Weber et al. (DOI: https://doi.org/10.1093/gigascience/giab062)
 - Start with demultiplexed/individual bams
 - Barcode suffix is replace with sample key e.g. K1, K2 etc.
